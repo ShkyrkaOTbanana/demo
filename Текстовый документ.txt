@@ -1,0 +1,164 @@
+create database if not exists final;
+use final;
+
+create table if not exists roles_name
+	(
+		id_name int auto_increment unique,
+        name varchar(255),
+        primary key(id_name)
+    );
+
+create table if not exists users
+	(
+		id_users int auto_increment unique,
+        role int,
+        foreign key(role) references roles_name(id_name),
+        fio varchar(255),
+        login varchar(255),
+        password varchar(255),
+        primary key(id_users)
+    );
+    
+create table if not exists pick_points
+	(
+		id_pick_points int auto_increment unique,
+        index_adress int(255),
+        city varchar(255),
+        street varchar(255),
+        number varchar(255),
+        primary key(id_pick_points)
+    );
+    
+create table if not exists status_name 
+	(
+		id_name int auto_increment unique,
+        name varchar(255),
+        primary key(id_name)
+    );
+    
+create table if not exists orders
+	(
+		id_order int auto_increment unique,
+        articul varchar(255),
+        amount int(255),
+        date_order date,
+        date_delivery date,
+        pick_point int,
+        foreign key(pick_point) references pick_points(id_pick_points),
+        fio varchar(255),
+        code int(255),
+        status int,
+        foreign key(status) references status_name(id_name)
+    );
+    
+create table if not exists tovar_name
+	(
+		id_name int auto_increment unique,
+        name varchar(255),
+        primary key(id_name)
+    );
+    
+create table if not exists measure_name
+	(
+		id_name int auto_increment unique,
+        name varchar(255),
+        primary key(id_name)
+    );
+    
+create table if not exists supplier_name
+	(
+		id_name int auto_increment unique,
+        name varchar(255),
+        primary key(id_name)
+    );
+    
+create table if not exists manufacturer_name
+	(
+		id_name int auto_increment unique,
+        name varchar(255),
+        primary key(id_name)
+    );
+    
+create table if not exists category_tovar_name
+	(
+		id_name int auto_increment unique,
+        name varchar(255),
+        primary key(id_name)
+    );
+    
+create table if not exists tovar 
+	(
+		id_tovar int auto_increment unique,
+        articul varchar(255),
+        tovar_name int,
+        foreign key(tovar_name) references tovar_name(id_name),
+        measure_name int,
+        foreign key(measure_name) references measure_name(id_name),
+        price int(255),
+        supplier_name int,
+        foreign key(supplier_name) references supplier_name(id_name),
+        manufacturer_name int,
+        foreign key(manufacturer_name) references manufacturer_name(id_name),
+        category_tovar_name int,
+        foreign key(category_tovar_name) references category_tovar_name(id_name),
+        discont int(255),
+        remain int(255),
+        description varchar(255),
+        photo varchar(255),
+        primary key(id_tovar)
+    );
+    
+select 
+	t.id_tovar,
+    t.articul,
+    tn.name,
+    mn.name,
+    t.price,
+    sn.name,
+    mnn.name,
+    ctn.name,
+    t.discont,
+    t.remain,
+    t.description,
+    t.photo
+from tovar as t
+left join tovar_name as tn on t.tovar_name = tn.id_name
+left join measure_name as mn on t.measure_name = mn.id_name
+left join supplier_name as sn on t.supplier_name = sn.id_name
+left join manufacturer_name as mnn on t.manufacturer_name = mnn.id_name
+left join category_tovar_name as ctn on t.category_tovar_name = ctn.id_name;
+
+    
+select * from roles_name;
+select * from users;
+select * from pick_points;
+select * from status_name;
+select * from orders;
+select * from tovar_name;
+select * from measure_name;
+select * from supplier_name;
+select * from manufacturer_name;
+select * from category_tovar_name;
+select * from tovar;
+
+
+
+
+
+select 
+	t.photo,
+    tn.name,
+    ctn.name,
+    t.description,
+    mn.name,
+    sn.name,
+    mnn.name,
+	t.price,
+    t.remain,
+    t.discont
+from tovar as t
+left join category_tovar_name as ctn on t.category_tovar_name = ctn.id_name
+left join tovar_name as tn on t.tovar_name = tn.id_name
+left join manufacturer_name as mn on t.manufacturer_name = mn.id_name
+left join supplier_name as sn on t.supplier_name = sn.id_name
+left join measure_name as mnn on t.measure_name = mnn.id_name;
